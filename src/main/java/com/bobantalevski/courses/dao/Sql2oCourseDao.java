@@ -40,4 +40,15 @@ public class Sql2oCourseDao implements CourseDao {
       throw new DaoException(ex, "Problem retrieving all courses");
     }
   }
+
+  @Override
+  public Course findById(int id) throws DaoException {
+    try (Connection connection = sql2o.open()) {
+      return connection.createQuery("SELECT * FROM courses WHERE id = :id")
+          .addParameter("id", id)
+          .executeAndFetchFirst(Course.class);
+    } catch (Sql2oException ex) {
+      throw new DaoException(ex, "Problems retrieving a course");
+    }
+  }
 }

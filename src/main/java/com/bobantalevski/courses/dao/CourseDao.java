@@ -8,4 +8,6 @@ public interface CourseDao {
   void add(Course course) throws DaoException;
 
   List<Course> findAll() throws DaoException;
+
+  Course findById(int id) throws DaoException;
 }
