@@ -7,11 +7,16 @@ import static spark.Spark.post;
 import static spark.Spark.get;
 
 import com.bobantalevski.courses.dao.CourseDao;
+import com.bobantalevski.courses.dao.ReviewDao;
 import com.bobantalevski.courses.dao.Sql2oCourseDao;
+import com.bobantalevski.courses.dao.Sql2oReviewDao;
 import com.bobantalevski.courses.exc.ApiError;
+import com.bobantalevski.courses.exc.DaoException;
 import com.bobantalevski.courses.model.Course;
+import com.bobantalevski.courses.model.Review;
 import com.google.gson.Gson;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.sql2o.Sql2o;
 import spark.Route;
@@ -30,6 +35,7 @@ public class Api {
 
     Sql2o sql2o = new Sql2o(dataSource + ";INIT=RUNSCRIPT from 'classpath:db/init.sql'", "", "");
     CourseDao courseDao = new Sql2oCourseDao(sql2o);
+    ReviewDao reviewDao = new Sql2oReviewDao(sql2o);
     Gson gson = new Gson();
 
     // Creating a course
@@ -52,6 +58,30 @@ public class Api {
         throw new ApiError(404,"Could not find course with id " + id);
       }
       return course;
+    }, gson::toJson);
+
+    post("/courses/:courseId/reviews", "application/json", (req, res) -> {
+      int courseId = Integer.parseInt(req.params("courseId"));
+      Review review = gson.fromJson(req.body(), Review.class);
+      review.setCourseId(courseId);
+      try {
+        reviewDao.add(review);
+      } catch (DaoException ex) {
+        throw new ApiError(500, ex.getMessage());
+      }
+      res.status(201);
+      return review;
+    }, gson::toJson);
+
+    get("/courses/:courseId/reviews", "application/json", (req, res) -> {
+      int courseId = Integer.parseInt(req.params("courseId"));
+      List<Review> reviews = reviewDao.findByCourseId(courseId);
+      if (reviews.size() > 0) {
+        res.status(200);
+      } else {
+        res.status(404);
+      }
+      return reviews;
     }, gson::toJson);
 
     exception(ApiError.class, (exc, req, res) -> {

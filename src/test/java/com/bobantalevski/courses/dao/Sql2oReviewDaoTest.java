@@ -67,4 +67,9 @@ public class Sql2oReviewDaoTest {
 
     reviewDao.add(review);
   }
+
+  @Test
+  public void noReviewsForAnExistingCourseReturnsEmptyList() throws Exception{
+    assertEquals(0, reviewDao.findByCourseId(testCourse.getId()).size());
+  }
 }
