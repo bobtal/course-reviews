@@ -10,5 +10,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Gradle: org.sql2o:sql2o:1.5.4" level="project" />
+    <orderEntry type="library" name="Gradle: com.h2database:h2:1.4.196" level="project" />
   </component>
 </module>

@@ -2,6 +2,7 @@ package com.bobantalevski.courses.dao;
 
 import com.bobantalevski.courses.exc.DaoException;
 import com.bobantalevski.courses.model.Course;
+import java.util.ArrayList;
 import java.util.List;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
@@ -30,7 +31,13 @@ public class Sql2oCourseDao implements CourseDao {
   }
 
   @Override
-  public List<Course> findAll() {
-    return null;
+  public List<Course> findAll() throws DaoException{
+    try (Connection connection = sql2o.open()) {
+      String sql = "SELECT * FROM courses";
+      return connection.createQuery(sql)
+          .executeAndFetch(Course.class);
+    } catch (Sql2oException ex) {
+      throw new DaoException(ex, "Problem retrieving all courses");
+    }
   }
 }

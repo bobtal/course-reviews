@@ -7,5 +7,5 @@ import java.util.List;
 public interface CourseDao {
   void add(Course course) throws DaoException;
 
-  List<Course> findAll();
+  List<Course> findAll() throws DaoException;
 }
