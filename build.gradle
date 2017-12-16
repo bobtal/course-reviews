@@ -16,6 +16,7 @@ dependencies {
     compile 'com.h2database:h2:1.4.196'
     // https://mvnrepository.com/artifact/com.sparkjava/spark-core
     compile 'com.sparkjava:spark-core:2.7.1'
+    compile 'org.slf4j:slf4j-simple:1.7.21'
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
     compile 'com.google.code.gson:gson:2.8.2'
 
