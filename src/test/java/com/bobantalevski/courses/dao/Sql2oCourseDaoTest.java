@@ -19,7 +19,10 @@ public class Sql2oCourseDaoTest {
     String connectionString = "jdbc:h2:mem:testing;INIT=RUNSCRIPT from 'classpath:db/init.sql'";
     Sql2o sql2o = new Sql2o(connectionString, "", "");
     dao = new Sql2oCourseDao(sql2o);
-    // Keep connection open through entire test so that it isn't wiped out
+    // Keep connection open through entire test so that it isn't wiped out.
+    // This is per test method, not using the same connection for all the tests
+    // cause then we could have an already filled database by addition tests and not
+    // getting a proper state when checking for an empty list if we haven't added any courses
     // With in memory database, when all connections to it are closed, it gets erased
     conn = sql2o.open();
   }
