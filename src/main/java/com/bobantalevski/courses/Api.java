@@ -1,6 +1,7 @@
 package com.bobantalevski.courses;
 
 import static spark.Spark.after;
+import static spark.Spark.port;
 import static spark.Spark.post;
 import static spark.Spark.get;
 
@@ -13,7 +14,17 @@ import spark.Route;
 
 public class Api {
   public static void main(String[] args) {
-    Sql2o sql2o = new Sql2o("jdbc:h2:~/reviews.db;INIT=RUNSCRIPT from 'classpath:db/init.sql'", "", "");
+    String dataSource = "jdbc:h2:~/reviews.db";
+    if (args.length > 0) {
+      if (args.length != 2) {
+        System.out.println("java Api <port> <datasource>");
+        System.exit(0);
+      }
+      port(Integer.parseInt(args[0]));
+      dataSource = args[1];
+    }
+
+    Sql2o sql2o = new Sql2o(dataSource + ";INIT=RUNSCRIPT from 'classpath:db/init.sql'", "", "");
     CourseDao courseDao = new Sql2oCourseDao(sql2o);
     Gson gson = new Gson();
 

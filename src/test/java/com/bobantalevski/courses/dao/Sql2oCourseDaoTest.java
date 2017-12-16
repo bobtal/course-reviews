@@ -34,7 +34,7 @@ public class Sql2oCourseDaoTest {
 
   @Test
   public void addingCourseSetsId() throws Exception {
-    Course course = newTestCourse();
+    Course course = Course.newTestCourse();
     int originalCourseId = course.getId();
 
     dao.add(course);
@@ -44,7 +44,7 @@ public class Sql2oCourseDaoTest {
 
   @Test
   public void addedCoursesAreReturnedFromFindAll() throws Exception {
-    Course course = newTestCourse();
+    Course course = Course.newTestCourse();
 
     dao.add(course);
 
@@ -58,7 +58,7 @@ public class Sql2oCourseDaoTest {
 
   @Test
   public void existingCoursesCanBeFoundById() throws Exception {
-    Course course = newTestCourse();
+    Course course = Course.newTestCourse();
     dao.add(course);
 
     Course foundCourse = dao.findById(course.getId());
@@ -66,7 +66,4 @@ public class Sql2oCourseDaoTest {
     assertEquals(course, foundCourse);
   }
 
-  private Course newTestCourse() {
-    return new Course("Test", "http://test.com");
-  }
 }

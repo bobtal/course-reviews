@@ -12,6 +12,10 @@ public class Course {
     this.url = url;
   }
 
+  public static Course newTestCourse() {
+    return new Course("Test", "http://test.com");
+  }
+
   public int getId() {
     return id;
   }
