@@ -7,7 +7,7 @@ import java.util.List;
 public interface ReviewDao {
   void add(Review review) throws DaoException;
 
-  List<Review> findAll();
+  List<Review> findAll() throws DaoException;
 
-  List<Review> findByCourseId(int courseId);
+  List<Review> findByCourseId(int courseId) throws DaoException;
 }
