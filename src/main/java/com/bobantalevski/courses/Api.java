@@ -1,14 +1,18 @@
 package com.bobantalevski.courses;
 
 import static spark.Spark.after;
+import static spark.Spark.exception;
 import static spark.Spark.port;
 import static spark.Spark.post;
 import static spark.Spark.get;
 
 import com.bobantalevski.courses.dao.CourseDao;
 import com.bobantalevski.courses.dao.Sql2oCourseDao;
+import com.bobantalevski.courses.exc.ApiError;
 import com.bobantalevski.courses.model.Course;
 import com.google.gson.Gson;
+import java.util.HashMap;
+import java.util.Map;
 import org.sql2o.Sql2o;
 import spark.Route;
 
@@ -43,10 +47,23 @@ public class Api {
 
     get("/courses/:id", "application/json", (req, res) -> {
       int id = Integer.parseInt(req.params("id"));
-      // TODO: what if this is not found
       Course course = courseDao.findById(id);
+      if (course == null) {
+        throw new ApiError(404,"Could not find course with id " + id);
+      }
       return course;
     }, gson::toJson);
+
+    exception(ApiError.class, (exc, req, res) -> {
+      ApiError err = (ApiError) exc;
+      Map<String, Object> jsonMap = new HashMap<>();
+      jsonMap.put("status", err.getStatus());
+      jsonMap.put("errorMessage", err.getMessage());
+      // after doesn't run in the exception handler
+      res.type("application/status");
+      res.status(err.getStatus());
+      res.body(gson.toJson(jsonMap));
+    });
 
     after((req, res) -> res.type("application/json"));
   }
